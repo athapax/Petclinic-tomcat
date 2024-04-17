@@ -32,28 +32,14 @@ pipeline {
                 sh "mvn clean install"
             } 
         }
-        stage('Approval') {
-            steps {
-                script {
-                    // Request approval from a specific user
-                    def userInput = input(
-                        id: 'userInput', 
-                        message: 'Do you want to proceed with deployment?', 
-                        parameters: [
-                            [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Proceed with deployment?', name: 'Proceed']
-                        ]
-                    )
-                    // Check if user approved the deployment
-                    if (!userInput.Proceed) {
-                        error('Deployment aborted by user.')
-                    }
-                }
-            }
-        }        
-
         stage('Deploy') {
             steps {
                  echo "Deploying our war file into our tomcat prod server"
+                
+                 timeout(time:8, unit: "MINUTES) {
+           input message: 'Can i deploy to prod ?', parameters: [choice(choices: ['Yes', 'No'], name: 'Prod-approval')], submitter: 'Anil-admin', submitterParameter: 'admin'
+                         } 
+                         
                 sshagent(['tomcat-pipeline']) {
                     sh "scp -o StrictHostKeyChecking=no target/petclinic.war tomcat@54.161.48.79:/opt/tomcat/webapps"
                    }
