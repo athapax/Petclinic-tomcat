@@ -32,6 +32,25 @@ pipeline {
                 sh "mvn clean install"
             } 
         }
+        stage('Approval') {
+            steps {
+                script {
+                    // Request approval from a specific user
+                    def userInput = input(
+                        id: 'userInput', 
+                        message: 'Do you want to proceed with deployment?', 
+                        parameters: [
+                            [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Proceed with deployment?', name: 'Proceed']
+                        ]
+                    )
+                    // Check if user approved the deployment
+                    if (!userInput.Proceed) {
+                        error('Deployment aborted by user.')
+                    }
+                }
+            }
+        }        
+
         stage('Deploy') {
             steps {
                  echo "Deploying our war file into our tomcat prod server"
