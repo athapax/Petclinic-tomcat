@@ -11,7 +11,7 @@ pipeline {
         }
         stage('Validate') {
             steps {
-                echo "Validating on our maven build"
+                echo "Validating on our maven build again"
                 sh "mvn clean validate"
             } 
         }
