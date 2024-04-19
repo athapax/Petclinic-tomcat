@@ -41,7 +41,7 @@ pipeline {
                          } 
                          
                 sshagent(['tomcat-pipeline']) {
-                    sh "scp -o StrictHostKeyChecking=no target/petclinic.war tomcat@54.161.48.79:/opt/tomcat/webapps"
+                    sh "scp -o StrictHostKeyChecking=no target/petclinic.war tomcat@44.202.96.52:/opt/tomcat/webapps"
                    }
                 }
             } 
